@@ -1,78 +1,304 @@
 <!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Form Pendataan Anggota - PAM GKI LAHAI-ROI NENDALI</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Form Pendataan Anggota</title>
   <style>
-    body {font-family:sans-serif;background:#f7f9fc;padding:20px;}
-    .container{max-width:700px;margin:auto;background:#fff;padding:20px;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.1);}
-    h1{margin-top:0}
-    label{display:block;margin:10px 0 4px;font-weight:600}
-    input,select,textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:6px}
-    .radio-group{display:flex;gap:15px;margin:6px 0}
-    button{margin-top:16px;padding:12px 20px;border:none;border-radius:8px;background:#4f46e5;color:#fff;font-weight:600;cursor:pointer}
+    :root {
+      --bg-color: #f4f7fa;
+      --text-color: #222;
+      --card-bg: #fff;
+      --input-bg: #f9f9f9;
+      --border-color: #ddd;
+      --accent: #2193b0;
+      --accent2: #6dd5ed;
+      --success: #28a745;
+      --error: #dc3545;
+    }
+
+    body.dark {
+      --bg-color: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      --text-color: #e0e0e0;
+      --card-bg: rgba(20,20,20,0.9);
+      --input-bg: #1c1c1c;
+      --border-color: #444;
+      --accent: #00c6ff;
+      --accent2: #0072ff;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: var(--bg-color);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: var(--text-color);
+      transition: all 0.4s ease;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 520px;
+      overflow: hidden;
+      transition: all 0.4s ease;
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      padding: 25px;
+      text-align: center;
+      color: #fff;
+      position: relative;
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    /* Toggle Switch */
+    .toggle-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 25px;
+      background: #ccc;
+      border-radius: 25px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 3px;
+      transition: background 0.3s;
+    }
+
+    .toggle-circle {
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
+
+    body.dark .toggle-btn {
+      background: #444;
+    }
+
+    body.dark .toggle-circle {
+      transform: translateX(25px);
+      background: #00c6ff;
+    }
+
+    .card-body {
+      padding: 30px;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--text-color);
+    }
+
+    input[type="text"],
+    input[type="date"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      margin-bottom: 18px;
+      font-size: 14px;
+      background: var(--input-bg);
+      color: var(--text-color);
+      transition: all 0.3s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 8px rgba(0,198,255,0.3);
+      outline: none;
+      background: #fff;
+    }
+
+    body.dark input:focus,
+    body.dark textarea:focus,
+    body.dark select:focus {
+      background: #222;
+    }
+
+    input[type="radio"] {
+      margin-right: 6px;
+      accent-color: var(--accent);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.3s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 12px rgba(0,198,255,0.4);
+    }
+
+    .loader {
+      border: 4px solid #333;
+      border-top: 4px solid var(--accent);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+
+    #msg {
+      margin-top: 15px;
+      padding: 14px;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: 500;
+      display: none;
+    }
+
+    #msg.success {
+      background: rgba(40,167,69,0.2);
+      color: var(--success);
+      border: 1px solid var(--success);
+    }
+
+    #msg.error {
+      background: rgba(220,53,69,0.2);
+      color: var(--error);
+      border: 1px solid var(--error);
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Form Pendataan Anggota</h1>
-    <form action="https://docs.google.com/forms/d/e/1FAIpQLSdRUSxUtpScEL7fBPO2ZbrcomtEK81FAivnaDn2t2qUSQT6Eg/formResponse" method="POST" target="_self">
-      
-      <label for="nama">Nama Lengkap *</label>
-      <input type="text" id="nama" name="entry.2005620554" required>
-
-      <label>Jenis Kelamin *</label>
-      <div class="radio-group">
-        <label><input type="radio" name="entry.839337160" value="Laki-laki" required> Laki-laki</label>
-        <label><input type="radio" name="entry.839337160" value="Perempuan"> Perempuan</label>
+  <div class="card">
+    <div class="card-header">
+      <h2>Form Pendataan Anggota<br>PAM GKI LAHAI-ROI NENDALI</h2>
+      <div class="toggle-btn" id="themeToggle">
+        <div class="toggle-circle"></div>
       </div>
+    </div>
+    <div class="card-body">
+      <form id="pendataanForm">
+        <label>Nama Lengkap:</label>
+        <input type="text" name="nama" required>
 
-      <label for="tempat">Tempat Lahir</label>
-      <input type="text" id="tempat" name="entry.1166974658">
+        <label>Jenis Kelamin:</label>
+        <input type="radio" name="jenis_kelamin" value="Laki-laki" required> Laki-laki
+        <input type="radio" name="jenis_kelamin" value="Perempuan"> Perempuan
 
-      <label for="tgl">Tanggal Lahir</label>
-      <input type="date" id="tgl" name="entry.83902422">
+        <label>Tempat Lahir:</label>
+        <input type="text" name="tempat_lahir">
 
-      <label for="alamat">Alamat</label>
-      <textarea id="alamat" name="entry.1065046570"></textarea>
+        <label>Tanggal Lahir:</label>
+        <input type="date" name="tanggal_lahir">
 
-      <label for="nomor">Nomor HP/WA *</label>
-      <input type="text" id="nomor" name="entry.1045781291" required>
+        <label>Alamat:</label>
+        <textarea name="alamat" rows="3"></textarea>
 
-      <label for="pendidikan">Pendidikan Terakhir</label>
-      <select id="pendidikan" name="entry.1166974659">
-        <option value="">-- Pilih --</option>
-        <option>SD</option>
-        <option>SMP</option>
-        <option>SMA/SMK</option>
-        <option>D-III</option>
-        <option>Sarjana (S1)</option>
-        <option>Magister (S2)</option>
-      </select>
+        <label>Nomor HP/WA:</label>
+        <input type="text" name="nomor" required>
 
-      <label for="pekerjaan">Pekerjaan</label>
-      <select id="pekerjaan" name="entry.83902423">
-        <option value="">-- Pilih --</option>
-        <option>Bekerja</option>
-        <option>Tidak Bekerja</option>
-        <option>Pelajar</option>
-      </select>
+        <label>Pendidikan Terakhir:</label>
+        <select name="pendidikan">
+          <option value="">-- Pilih --</option>
+          <option>SD</option>
+          <option>SMP</option>
+          <option>SMA/SMK</option>
+          <option>D-III</option>
+          <option>Sarjana (S1)</option>
+          <option>Magister (S2)</option>
+        </select>
 
-      <label for="rayon">Rayon</label>
-      <select id="rayon" name="entry.2005620555">
-        <option value="">-- Pilih --</option>
-        <option>I</option>
-        <option>II</option>
-        <option>III</option>
-        <option>IV</option>
-      </select>
+        <label>Pekerjaan:</label>
+        <select name="pekerjaan">
+          <option value="">-- Pilih --</option>
+          <option>Bekerja</option>
+          <option>Tidak Bekerja</option>
+          <option>Pelajar</option>
+        </select>
 
-      <label for="domisili">Domisili Sekarang</label>
-      <input type="text" id="domisili" name="entry.839337161">
+        <label>Rayon:</label>
+        <select name="rayon">
+          <option value="">-- Pilih --</option>
+          <option>I</option>
+          <option>II</option>
+          <option>III</option>
+          <option>IV</option>
+        </select>
 
-      <button type="submit">Kirim</button>
-    </form>
+        <label>Domisili Sekarang:</label>
+        <input type="text" name="domisili">
+
+        <button type="submit">Kirim Data</button>
+      </form>
+
+      <div class="loader" id="loader"></div>
+      <p id="msg"></p>
+    </div>
   </div>
+
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwN-KJ_e4UY4l_0JyhnTDneTMm3-3n-qmt0YPA70Augb8HJBrrM2NvcO1D054ABRj7WVw/exec";
+    const form = document.getElementById("pendataanForm");
+    const msg = document.getElementById("msg");
+    const loader = document.getElementById("loader");
+    const themeToggle = document.getElementById("themeToggle");
+
+    // Toggle theme
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+    });
+
+    // Submit form
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      msg.style.display = "none";
+      loader.style.display = "block";
+
+      fetch(scriptURL, { method: "POST", body: new FormData(form)})
+        .then(response => {
+          loader.style.display = "none";
+          msg.style.display = "block";
+          msg.className = "success";
+          msg.innerHTML = "✅ Data berhasil dikirim!";
+          form.reset();
+          setTimeout(() => { msg.style.display = "none"; }, 4000);
+        })
+        .catch(error => {
+          loader.style.display = "none";
+          msg.style.display = "block";
+          msg.className = "error";
+          msg.innerHTML = "❌ Gagal mengirim: " + error.message;
+        });
+    });
+  </script>
 </body>
 </html>
