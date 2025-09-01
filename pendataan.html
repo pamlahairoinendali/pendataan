@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Form Pendataan Anggota - PAM GKI LAHAI-ROI NENDALI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1: #f0f6ff;
+      --accent: #4f46e5;
+      --card: #ffffff;
+      --muted: #6b7280;
+      --radius: 12px;
+      font-family: "Poppins", system-ui, sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background: linear-gradient(135deg,#e6f0ff 0%, #ffffff 100%);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      color:#0f172a;
+    }
+    .container{
+      width:100%;
+      max-width:820px;
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:0 8px 30px rgba(15,23,42,0.08);
+      padding:28px;
+    }
+    h1{margin:0 0 6px;font-size:1.25rem;}
+    p.lead{margin:0 0 18px;color:var(--muted);font-size:0.95rem}
+    form.grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+    }
+    @media (max-width:720px){ form.grid{grid-template-columns:1fr}}
+    label{display:block;font-size:0.9rem;margin-bottom:6px;font-weight:600}
+    input[type="text"], input[type="date"], textarea, select {
+      width:100%;
+      padding:10px 12px;
+      border:1px solid #e6e9ef;
+      border-radius:10px;
+      font-size:0.95rem;
+      background:transparent;
+    }
+    textarea{min-height:90px; resize:vertical}
+    .full{grid-column:1 / -1}
+    .radio-group{display:flex;gap:12px;align-items:center}
+    .radio-group label{font-weight:400}
+    .actions{display:flex;gap:12px;justify-content:flex-end;margin-top:16px}
+    .btn{
+      padding:10px 14px;border-radius:10px;border:0;font-weight:600;
+      cursor:pointer;font-size:0.95rem;
+    }
+    .btn-primary{background:var(--accent);color:white;box-shadow:0 6px 18px rgba(79,70,229,0.12)}
+    .btn-ghost{background:#f3f4f6;color:#0f172a}
+    .note{font-size:0.85rem;color:var(--muted);margin-top:8px}
+    .required{color:#dc2626;margin-left:6px;font-weight:700}
+    .success{display:none;padding:12px;border-radius:10px;background:#ecfdf5;color:#064e3b;margin-top:12px}
+    .row{display:flex;gap:12px}
+  </style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>Form Pendataan Anggota</h1>
+    <p class="lead">Isi data anggota untuk Pembaruan Data Anggota PAM GKI LAHAI-ROI NENDALI.</p>
+
+    <form id="pendataanForm" class="grid" onsubmit="handleSubmit(event)">
+      <!-- Nama Lengkap -->
+      <div class="full">
+        <label for="nama">Nama Lengkap <span class="required">*</span></label>
+        <input id="nama" name="nama" type="text" placeholder="Nama lengkap" required>
+      </div>
+
+      <!-- Jenis Kelamin -->
+      <div>
+        <label>Jenis Kelamin <span class="required">*</span></label>
+        <div class="radio-group" role="radiogroup" aria-labelledby="jk-label">
+          <label><input type="radio" name="jenis_kelamin" value="Laki-laki" required> Laki-laki</label>
+          <label><input type="radio" name="jenis_kelamin" value="Perempuan" required> Perempuan</label>
+        </div>
+      </div>
+
+      <!-- Tempat Lahir -->
+      <div>
+        <label for="tempat_lahir">Tempat Lahir</label>
+        <input id="tempat_lahir" name="tempat_lahir" type="text" placeholder="Contoh: NETAR">
+      </div>
+
+      <!-- Tanggal Lahir -->
+      <div>
+        <label for="tanggal_lahir">Tanggal Lahir</label>
+        <input id="tanggal_lahir" name="tanggal_lahir" type="date" placeholder="07 April 1997">
+      </div>
+
+      <!-- Alamat -->
+      <div class="full">
+        <label for="alamat">Alamat</label>
+        <textarea id="alamat" name="alamat" placeholder="Alamat lengkap"></textarea>
+      </div>
+
+      <!-- Nomor HP/WA -->
+      <div>
+        <label for="nomor">Nomor HP/WA <span class="required">*</span></label>
+        <input id="nomor" name="nomor" type="text" placeholder="08xx xxxx xxxx" required
+               pattern="^\+?[0-9\s\-]{6,20}$" title="Masukkan nomor telepon yang valid (angka, spasi, +, - diperbolehkan)">
+      </div>
+
+      <!-- Pendidikan Terakhir -->
+      <div>
+        <label for="pendidikan">Pendidikan Terakhir</label>
+        <select id="pendidikan" name="pendidikan">
+          <option value="" selected>-- Pilih --</option>
+          <option>SD</option>
+          <option>SMP</option>
+          <option>SMA/SMK</option>
+          <option>D-III</option>
+          <option>Sarjana (S1)</option>
+          <option>Magister (S2)</option>
+        </select>
+      </div>
+
+      <!-- Pekerjaan -->
+      <div>
+        <label for="pekerjaan">Pekerjaan</label>
+        <select id="pekerjaan" name="pekerjaan">
+          <option value="" selected>-- Pilih --</option>
+          <option>Bekerja</option>
+          <option>Tidak Bekerja</option>
+          <option>Pelajar</option>
+        </select>
+      </div>
+
+      <!-- Rayon -->
+      <div>
+        <label for="rayon">Rayon</label>
+        <select id="rayon" name="rayon">
+          <option value="" selected>-- Pilih --</option>
+          <option>I</option>
+          <option>II</option>
+          <option>III</option>
+          <option>IV</option>
+        </select>
+      </div>
+
+      <!-- Domisili Sekarang -->
+      <div>
+        <label for="domisili">Domisili Sekarang</label>
+        <input id="domisili" name="domisili" type="text" placeholder="Contoh: Kampung Netar">
+      </div>
+
+      <div class="full actions">
+        <button type="reset" class="btn btn-ghost">Clear form</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+
+      <div id="success" class="success">Terima kasih — Data Anda sudah dicatat (demo). Jika Anda ingin data ini langsung terkirim ke Google Forms, minta saya untuk menghubungkan entri ke form asli.</div>
+      <div class="note full">* Fields dengan tanda <span class="required">*</span> wajib diisi. Jangan kirimkan password via form ini.</div>
+    </form>
+  </div>
+
+  <script>
+    function handleSubmit(e){
+      e.preventDefault();
+      // Sederhana: tunjukkan pesan sukses, dan log data ke console (demo).
+      const f = document.getElementById('pendataanForm');
+      const data = new FormData(f);
+      const obj = {};
+      for (const [k,v] of data.entries()){
+        obj[k] = v;
+      }
+      console.log('Form data (demo):', obj);
+      document.getElementById('success').style.display = 'block';
+      // Jika ingin, Anda bisa mengirim obj ke server Anda via fetch().
+      // Untuk mengirim langsung ke Google Forms: ubah 'form' action dan input name ke entry.<ID>.
+    }
+  </script>
+</body>
+</html>
